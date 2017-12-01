@@ -1,0 +1,35 @@
+{
+  "name": "needle-hapi",
+  "version": "1.0.0",
+  "description": "",
+  "main": "src/server.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node src/server.js"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "boom": "^7.1.1",
+    "dotenv-safe": "^4.0.4",
+    "hapi": "^17.1.1",
+    "knex": "^0.14.2",
+    "lodash": "^4.17.4",
+    "pg": "^7.4.0",
+    "primus": "^7.1.0",
+    "unique-slug": "^2.0.0"
+  },
+  "devDependencies": {
+    "code": "^5.1.2",
+    "eslint": "^4.12.1",
+    "eslint-config-airbnb-base": "^12.1.0",
+    "eslint-config-google": "^0.9.1",
+    "eslint-config-standard": "^10.2.1",
+    "eslint-plugin-import": "^2.8.0",
+    "eslint-plugin-node": "^5.2.1",
+    "eslint-plugin-promise": "^3.6.0",
+    "eslint-plugin-standard": "^3.0.1",
+    "lab": "^15.1.2"
+  }
+}
