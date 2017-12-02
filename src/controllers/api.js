@@ -1,19 +1,30 @@
 const Boom = require('boom')
 
 async function register (server, options) {
-  const { utils, tunnel: tunnelService } = server.app.service
+  const { tunnel: tunnelService } = server.settings.app.service
 
   server.route({
-    path: '/',
+    path: '/slug/{slug}/',
     method: 'GET',
     handler: async (request, h) => {
-      const subdomain = utils.getSubDomain(request.url.hostname)
+      console.log(request.info)
+      const subdomain = request.params.slug
       const tunnel = await tunnelService.getTunnelBySlug(subdomain)
       if (tunnel) {
         return `Currently listening on tunnel ${subdomain}`
       } else {
         return Boom.notFound(`Tunnel ${subdomain} is invalid or stale`)
       }
+    },
+  })
+
+  server.route({
+    path: '/{p*}',
+    method: 'GET',
+    handler: async (request, h) => {
+      console.log(request.info)
+      console.log(request.url)
+      return request.info
     },
   })
 }

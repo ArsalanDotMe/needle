@@ -14,7 +14,7 @@ async function resetDatabase () {
   let knex = require('knex')({
     client: 'pg',
     connection: defaultConnUrl.replace(dbName, 'postgres'),
-    debug: true,
+    // debug: true,
   })
   await knex.raw(`DROP DATABASE IF EXISTS ${dbName}`)
   await knex.raw(`CREATE DATABASE ${dbName}`)
@@ -22,7 +22,7 @@ async function resetDatabase () {
   knex = require('knex')({
     client: 'pg',
     connection: defaultConnUrl,
-    debug: true,
+    // debug: true,
   })
   await knex.migrate.latest(migrationsConfig)
   return knex
