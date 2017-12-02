@@ -4,7 +4,18 @@ const Hapi = require('hapi')
 const { PORT } = process.env
 const db = require('./db/db')
 
-const server = Hapi.server({ port: PORT, app: { db } })
+const utils = require('./services/utils')()
+
+const server = Hapi.server({
+  port: PORT,
+  app: {
+    db,
+    service: {
+      tunnel: require('./services/tunnel_service')(db),
+      utils: require('./services/utils')(),
+    },
+  },
+})
 
 async function init () {
   try {
