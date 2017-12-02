@@ -17,16 +17,6 @@ async function register (server, options) {
       }
     },
   })
-
-  server.route({
-    path: '/{p*}',
-    method: 'GET',
-    handler: async (request, h) => {
-      console.log(request.info)
-      console.log(request.url)
-      return request.info
-    },
-  })
 }
 
 module.exports = {
