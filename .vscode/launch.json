@@ -10,7 +10,7 @@
             "name": "Debug Tests",
             "runtimeExecutable": "lab",
             "args": [
-                "test/controllers"
+                "test/controllers/io.test.js"
             ]
         },
         {

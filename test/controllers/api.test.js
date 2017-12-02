@@ -10,9 +10,10 @@ const lab = exports.lab = Lab.script()
 lab.experiment('Main API Controller', async () => {
   let server = null
   let tunnelService = null
+  let knex = null
 
   lab.before(async () => {
-    const knex = await db.resetDatabase()
+    knex = await db.resetDatabase()
     tunnelService = require('../../src/services/tunnel_service')(knex)
     server = Hapi.server({
       app: {
@@ -29,6 +30,10 @@ lab.experiment('Main API Controller', async () => {
       },
     })
     await server.register(ApiController)
+  })
+
+  lab.after(async () => {
+    await knex.destroy()
   })
 
   lab.test('Gives a 404 response when passed an invalid domain', async () => {

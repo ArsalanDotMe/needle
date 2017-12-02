@@ -1,13 +1,25 @@
+const SocketIO = require('socket.io')
 
 async function register (server, options) {
-  const tunnelService = require('../services/tunnel_service')(server.app.db)
-  const io = require('socket.io')(server.listener)
+  const { tunnel: tunnelService } = server.settings.app.service
+  const io = SocketIO.listen(server.listener)
+  const ioService = require('../services/io_service')(io, tunnelService)
 
-  io.on('connection', (socket) => {
-    socket.on('tunnel:new', async () => {
-      const tunnel = await tunnelService.createTunnel(socket.id)
-      socket.emit('tunnel:new', tunnel)
-    })
+  await ioService.init()
+
+  server.method('proxyPush', async (request, slug) => {
+    const raw = request.raw.req
+    const requestInfo = {
+      id: request.info.id,
+      url: raw.url,
+      headers: raw.headers,
+      method: raw.method,
+      host: request.info.host,
+      hostname: request.info.hostname,
+      protocol: raw.protocol,
+      parsedUrl: request.url,
+    }
+    return ioService.pushProxy(requestInfo, slug)
   })
 }
 

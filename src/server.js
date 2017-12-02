@@ -24,6 +24,7 @@ async function init () {
         destination: '/slug',
       },
     })
+    await server.register(require('./controllers/io'))
     await server.register(require('./controllers/api'))
     await server.start()
     console.log(`Server running at: ${server.info.uri}`)
