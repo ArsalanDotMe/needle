@@ -1,8 +1,9 @@
 {
-  "name": "needle-hapi",
+  "name": "needle",
   "version": "1.0.0",
-  "description": "",
+  "description": "Server for the needle service",
   "main": "src/server.js",
+  "private": true,
   "scripts": {
     "test": "lab",
     "start": "node src/server.js"
@@ -12,7 +13,7 @@
       "npm": ">=5.5.1"
   },
   "keywords": [],
-  "author": "",
+  "author": "Arsalan Ahmad <contact@arsalan.me>",
   "license": "ISC",
   "dependencies": {
     "bluebird": "^3.5.1",
@@ -31,8 +32,6 @@
   "devDependencies": {
     "code": "^5.1.2",
     "eslint": "^4.12.1",
-    "eslint-config-airbnb-base": "^12.1.0",
-    "eslint-config-google": "^0.9.1",
     "eslint-config-standard": "^10.2.1",
     "eslint-plugin-import": "^2.8.0",
     "eslint-plugin-node": "^5.2.1",
