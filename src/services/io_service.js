@@ -21,7 +21,6 @@ module.exports = function ioService (io, tunnelService) {
 
   async function init () {
     io.on('connection', (socket) => {
-      console.log('NEW CONNECTION')
       socket.on('tunnel:new', onNewTunnelRequest.bind(null, socket))
     })
   }

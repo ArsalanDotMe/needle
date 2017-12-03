@@ -7,7 +7,6 @@ async function register (server, options) {
     path: '/slug/{slug}/{p*}',
     method: '*',
     handler: async (request, h) => {
-      console.log('SLUG HANDLER ROUTE')
       const subdomain = request.params.slug
       const tunnel = await tunnelService.getTunnelBySlug(subdomain)
 
@@ -29,7 +28,6 @@ async function register (server, options) {
     path: '/{p*}',
     method: '*',
     handler: async (request, h) => {
-      console.log('CATCH-ALL ROUTE')
       const subdomain = utils.getSubDomain(request.info.hostname)
       const tunnel = await tunnelService.getTunnelBySlug(subdomain)
 

@@ -40,10 +40,4 @@ lab.experiment('Main API Controller', async () => {
     const res = await server.inject('http://invalid-slug.local.test/')
     expect(res.statusCode).to.equal(404)
   })
-
-  lab.test('Gives a 200 response when slug exists', async () => {
-    const tunnel = await tunnelService.createTunnel('fff')
-    const res = await server.inject(`http://${tunnel.slug}.local.test/`)
-    expect(res.statusCode).to.equal(200)
-  })
 })
