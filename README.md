@@ -1,5 +1,7 @@
 # Needle
 
+[![Build Status](https://travis-ci.org/ArsalanDotMe/needle.svg?branch=develop)](https://travis-ci.org/ArsalanDotMe/needle)
+
 Needle is a small tool that lets you expose your local services to the world. 
 
 Needle creates a tunnel for you between a webserver at <domain to be purchased> and your local client via websockets and grants you a special unique address that you can use to expose your services to the world.
