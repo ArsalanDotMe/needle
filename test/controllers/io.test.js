@@ -1,6 +1,7 @@
 const Lab = require('lab')
 const Code = require('code')
 const Hapi = require('hapi')
+const debug = require('debug')('io.test')
 const { expect } = Code
 const Promise = require('bluebird')
 
@@ -36,29 +37,41 @@ lab.experiment('Socket.io Controller', async () => {
     await knex.destroy()
   })
 
-  lab.test('Gives a 404 response when passed an invalid domain', async () => {
-    const res = await server.inject('http://invalid-slug.local.test/')
-    expect(res.statusCode).to.equal(404)
-  })
-
   lab.test('Successful proxying', { timeout: 10000 }, async () => {
     const io = require('socket.io-client')
-    const socket = io(server.info.uri)
-    socket.emit('tunnel:new')
+    const requestTimeout = 5000
 
-    const tunnel = await new Promise((resolve, reject) => {
-      socket.on('tunnel:new', (_tunnel) => resolve(_tunnel))
-    }).timeout(5000)
+    debug('starting server...')
+    await server.start()
+    debug(`Server started and listening at port ${server.info.port}`)
+
+    const socket = io(`http://localhost:${server.info.port}`)
+
+    debug('requesting new tunnel...')
+    const tunnel = await new Promise((resolve) => {
+      socket.emit('tunnel:new', {}, (tunnelInfo) => {
+        resolve(tunnelInfo)
+      })
+    }).timeout(requestTimeout)
+    debug('new tunnel received!')
 
     const targetUrl = `http://${tunnel.slug}.local.test/banana`
-    const proxy = await new Promise((resolve) => {
-      socket.on('tunnel:push', (request) => {
-        resolve(request)
+    const proxyPromise = new Promise((resolve) => {
+      socket.on('tunnel:push', (request, reply) => {
+        resolve({ request, reply })
       })
     }).timeout(5000)
-    const res = await server.inject(targetUrl)
-    const payload = res.payload
+    const resPromise = server.inject({
+      method: 'GET',
+      url: targetUrl,
+    })
+    const { request: proxiedData, reply } = await proxyPromise
+    expect(proxiedData.hostname).to.equal(`${tunnel.slug}.local.test`)
 
-    expect(payload.hostname).to.equal(`${tunnel.slug}.local.test`)
+    reply({ method: 'GET' })
+
+    const response = await resPromise
+    const payload = JSON.parse(response.payload)
+    expect(payload.method).to.equal('GET')
   })
 })

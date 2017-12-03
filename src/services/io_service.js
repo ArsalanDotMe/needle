@@ -1,15 +1,13 @@
-const Boom = require('boom')
 const Promise = require('bluebird')
 
 module.exports = function ioService (io, tunnelService) {
   const timeout = 10000 // 10 seconds
 
-  async function onNewTunnelRequest (socket) {
+  async function onNewTunnelRequest (socket, opts, reply) {
     const tunnel = await tunnelService.createTunnel(socket.id)
-    socket.emit('tunnel:new', tunnel)
+    reply(tunnel)
+    // socket.emit('tunnel:new', tunnel)
   }
-
-  const responseCallbacks = {}
 
   async function pushProxy (requestInfo, slug) {
     const tunnel = await tunnelService.getTunnelBySlug(slug)
@@ -24,15 +22,7 @@ module.exports = function ioService (io, tunnelService) {
   async function init () {
     io.on('connection', (socket) => {
       console.log('NEW CONNECTION')
-      onNewTunnelRequest(socket)
-      // socket.on('tunnel:new', onNewTunnelRequest.bind(null, socket))
-    })
-
-    io.on('tunnel:response', (response) => {
-      if (responseCallbacks[response.id]) {
-        responseCallbacks[response.id](response)
-        delete responseCallbacks[response.id]
-      }
+      socket.on('tunnel:new', onNewTunnelRequest.bind(null, socket))
     })
   }
 

@@ -1,4 +1,5 @@
 const SocketIO = require('socket.io')
+const debug = require('debug')('io.ctrl')
 
 async function register (server, options) {
   const { tunnel: tunnelService } = server.settings.app.service
@@ -6,8 +7,10 @@ async function register (server, options) {
   const ioService = require('../services/io_service')(io, tunnelService)
 
   await ioService.init()
+  debug('IO Service initiated')
 
   server.method('proxyPush', async (request, slug) => {
+    debug('New proxy push request arrived')
     const raw = request.raw.req
     const requestInfo = {
       id: request.info.id,
@@ -17,8 +20,8 @@ async function register (server, options) {
       host: request.info.host,
       hostname: request.info.hostname,
       protocol: raw.protocol,
-      parsedUrl: request.url,
     }
+    debug('Pushing following to ioService for proxy push', requestInfo)
     return ioService.pushProxy(requestInfo, slug)
   })
 }
